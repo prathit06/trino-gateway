@@ -22,6 +22,7 @@ import io.trino.gateway.ha.config.ProxyBackendConfiguration;
 import io.trino.gateway.ha.config.RequestAnalyzerConfig;
 import io.trino.gateway.ha.config.RulesExternalConfiguration;
 import io.trino.gateway.ha.handler.schema.RoutingTargetResponse;
+import io.trino.gateway.ha.router.GatewayBackendManager;
 import io.trino.gateway.ha.router.RoutingGroupSelector;
 import io.trino.gateway.ha.router.RoutingManager;
 import io.trino.gateway.ha.router.schema.ExternalRouterResponse;
@@ -114,7 +115,9 @@ class TestRoutingTargetHandler
         // Initialize the handler with the configuration
         handler = new RoutingTargetHandler(
                 routingManager,
-                RoutingGroupSelector.byRoutingExternal(httpClient, config.getRoutingRules().getRulesExternalConfiguration(), config.getRequestAnalyzerConfig()), config);
+                RoutingGroupSelector.byRoutingExternal(httpClient, config.getRoutingRules().getRulesExternalConfiguration(), config.getRequestAnalyzerConfig()),
+                Mockito.mock(GatewayBackendManager.class),
+                config);
     }
 
     @BeforeEach
@@ -342,6 +345,8 @@ class TestRoutingTargetHandler
         config.getRoutingRules().getRulesExternalConfiguration().setPropagateErrors(true);
         return new RoutingTargetHandler(
                 routingManager,
-                RoutingGroupSelector.byRoutingExternal(httpClient, config.getRoutingRules().getRulesExternalConfiguration(), config.getRequestAnalyzerConfig()), config);
+                RoutingGroupSelector.byRoutingExternal(httpClient, config.getRoutingRules().getRulesExternalConfiguration(), config.getRequestAnalyzerConfig()),
+                Mockito.mock(GatewayBackendManager.class),
+                config);
     }
 }
